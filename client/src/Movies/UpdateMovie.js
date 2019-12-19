@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const initValue = {
   metascore: '',
@@ -8,13 +9,32 @@ const initValue = {
 }
 
 const UpdateMovie = props => {
-  console.log('Props on UpdateMovie: ', props)
+  //console.log('Props on UpdateMovie: ', props)
   const [movie, setMovie] = useState(initValue);
+
+  const changeHandler = e => {
+    setMovie({
+      ...movie,
+      [e.target.name]: e.target.value
+    });
+    setMovie({
+      ...movie,
+      [e.target.name]: movie
+    });
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    axios
+      .put(`http://localhost:5001/api/movies/${movie.id}`, movie)
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
+  }
 
   return(
     <div>
       <h2>Update Movie</h2>
-      <form /*onSubmit={handleSubmit}*/>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="title"
@@ -49,9 +69,9 @@ const UpdateMovie = props => {
           placeholder="Description"
           value={movie.star}
         />
-        {/* <button onClick={handleSubmit}>
+        <button onClick={handleSubmit}>
           Update
-        </button> */}
+        </button>
       </form>
     </div>
   );
