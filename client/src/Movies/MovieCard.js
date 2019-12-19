@@ -4,7 +4,7 @@ const MovieCard = props => {
 
   const { title, director, metascore, stars } = props.movie;
 
-  //console.log('Props on MovieCard: ', props)
+  console.log('Props on MovieCard: ', props)
 
   return (
     <div className="movie-card">

@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import MovieCard from "./MovieCard";
+
 export default class Movie extends React.Component {
   constructor(props) {
     super(props);
@@ -43,7 +44,10 @@ export default class Movie extends React.Component {
     e.preventDefault();
     axios
     .delete(`http://localhost:5001/api/movies/${this.state.movie.id}`)
-      .then(res => console.log(res))
+      .then(res => {
+        //console.log(res)
+        this.props.history.push('/')
+        })
       .catch(err => console.log(err));
   };
 

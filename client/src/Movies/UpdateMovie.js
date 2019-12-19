@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const initValue = {
@@ -9,24 +9,30 @@ const initValue = {
 }
 
 const UpdateMovie = props => {
-  //console.log('Props on UpdateMovie: ', props)
+  let id = props.match.params.id;
+  
   const [movie, setMovie] = useState(initValue);
+  console.log('state updatemovie: ', movie)
+  //console.log('Props UpdateMovie: ', props)
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5001/api/movies/${id}`)
+      .then((res) => setMovie(res.data))
+      .catch((err) => console.log(err))
+  }, []);
 
   const changeHandler = e => {
     setMovie({
       ...movie,
       [e.target.name]: e.target.value
     });
-    setMovie({
-      ...movie,
-      [e.target.name]: movie
-    });
   };
 
   const handleSubmit = e => {
     e.preventDefault();
     axios
-      .put(`http://localhost:5001/api/movies/${movie.id}`, movie)
+      .put(`http://localhost:5001/api/movies/${id}`, movie)
       .then(res => console.log(res))
       .catch(err => console.log(err))
   }
@@ -38,7 +44,7 @@ const UpdateMovie = props => {
         <input
           type="text"
           name="title"
-          /*onChange={changeHandler}*/
+          onChange={changeHandler}
           placeholder="Movie Title"
           value={movie.name}
         />
@@ -47,7 +53,7 @@ const UpdateMovie = props => {
         <input
           type="text"
           name="director"
-          /*onChange={changeHandler}*//*onChange={changeHandler}*/
+          onChange={changeHandler}
           placeholder="Price"
           value={movie.director}
         />
@@ -56,7 +62,7 @@ const UpdateMovie = props => {
         <input
           type="text"
           name="metascore"
-          /*onChange={changeHandler}*/
+          onChange={changeHandler}
           placeholder="Image"
           value={movie.metascore}
         />
@@ -65,7 +71,7 @@ const UpdateMovie = props => {
         <input
           type="text"
           name="star"
-          /*onChange={changeHandler}*/
+          onChange={changeHandler}
           placeholder="Description"
           value={movie.star}
         />
