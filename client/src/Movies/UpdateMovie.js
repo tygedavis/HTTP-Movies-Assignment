@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const initValue = {
-  metascore: '',
-  director: '',
-  title: '',
-  stars: []
-}
-
 const UpdateMovie = props => {
   let id = props.match.params.id;
   
-  const [movie, setMovie] = useState(initValue);
-  console.log('state updatemovie: ', movie)
-  //console.log('Props UpdateMovie: ', props)
+  const [movie, setMovie] = useState({
+    metascore: '',
+    director: '',
+    title: '',
+    stars: []
+  });
 
   useEffect(() => {
     axios
       .get(`http://localhost:5001/api/movies/${id}`)
       .then((res) => setMovie(res.data))
       .catch((err) => console.log(err))
-  }, []);
+  }, [id]);
 
   const changeHandler = e => {
     setMovie({
@@ -33,9 +29,20 @@ const UpdateMovie = props => {
     e.preventDefault();
     axios
       .put(`http://localhost:5001/api/movies/${id}`, movie)
-      .then(res => console.log(res))
+      .then(res => {
+        console.log('Res: ', res)
+        setMovie(res.data);
+        props.history.push(`/movies/${id}`)
+        })
       .catch(err => console.log(err))
   }
+
+  const updateStars = (star, index) => {
+    const changedStar = movie.stars.map((item, i) => 
+      i === index ? star : item
+    );
+    setMovie({ ...movie, stars: changedStar });
+  };
 
   return(
     <div>
@@ -68,13 +75,16 @@ const UpdateMovie = props => {
         />
         <div className="baseline" />
 
-        <input
+        {movie.stars.map((star, index) => {
+        return(<input
           type="text"
           name="star"
-          onChange={changeHandler}
-          placeholder="Description"
-          value={movie.star}
-        />
+          onChange={e => updateStars(e.target.value, index)}
+          placeholder="Stars"
+          value={star}
+        />)
+        })}
+
         <button onClick={handleSubmit}>
           Update
         </button>
